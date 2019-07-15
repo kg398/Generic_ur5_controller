@@ -1,0 +1,429 @@
+def kg_client():
+  set_standard_analog_input_domain(0, 1)
+  set_standard_analog_input_domain(1, 1)
+  set_tool_analog_input_domain(0, 1)
+  set_tool_analog_input_domain(1, 1)
+  set_analog_outputdomain(0, 0)
+  set_analog_outputdomain(1, 0)
+  set_tool_voltage(24)
+  set_input_actions_to_default()
+  set_tcp(p[0.0,0.0,0.11,0.0,0.0,0.0])
+  set_payload(0.0)
+  set_gravity([0.0, 0.0, 9.82])
+  $ 1 "BeforeStart"
+  $ 2 "var_1≔ False "
+  global var_1=  False  
+  $ 3 "thread_flag≔ False "
+  global thread_flag=  False  
+  $ 4 "var_10≔[0,0,0,0,0,0,0,0,0,0]"
+  global var_10=[0,0,0,0,0,0,0,0,0,0]
+  $ 5 "Set"
+  set_tcp(p[0.0,0.0,0.11,0.0,0.0,0.0])
+  $ 190 "Thread_1"
+  thread Thread_1():
+    while (True):
+      while (thread_flag==  False  ):
+        var_12=0
+        sleep(0.01)
+      end
+      sleep(0.001)
+      global var_11=get_tcp_force()
+      if (var_11[axis]*var_11[axis]<var_2[11]*var_2[11]):
+        var_12=0
+      else:
+        var_12=var_12+1
+        if (var_12>0):
+          thread_flag=  False
+        end
+      end
+    end
+  end
+  threadId_Thread_1 = run Thread_1()
+  while (True):
+    $ 6 "Robot Program"
+    $ 7 "Loop var_1==False"
+    while (var_1==False):
+      $ 8 "var_1≔socket_open('192.168.1.5',30010)"
+      global var_1=socket_open("192.168.1.5",30010)
+      $ 9 "Wait: 0.5"
+      sleep(0.5)
+    end
+    $ 10 "Loop var_1== True "
+    thread Thread_while_10():
+      while (True):
+        $ 11 "Wait: 0.001"
+        sleep(0.001)
+        $ 12 "var_2≔socket_read_ascii_float(12)"
+        global var_2=socket_read_ascii_float(12)
+        $ 13 "Loop var_2[0]≠12"
+        while (var_2[0] != 12):
+          $ 14 "var_2≔socket_read_ascii_float(12)"
+          global var_2=socket_read_ascii_float(12)
+        end
+        $ 15 "Switch var_2[1]"
+        switch_1 = var_2[1]
+        if (0 == switch_1):
+          $ 17 "'movejl'"
+          # 'movejl'
+          $ 18 "var_3≔p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]"
+          global var_3=p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]
+          $ 19 "movej(var_3,var_2[8],var_2[9],var_2[10],var_2[11])"
+          movej(var_3,var_2[8],var_2[9],var_2[10],var_2[11])
+          $ 20 "If var_2[12]==0"
+          if (var_2[12]==0):
+            $ 21 "socket_send_string('completed_pose_move')"
+            socket_send_string("completed_pose_move")
+          end
+        elif (1 == switch_1):
+          $ 23 "'movej'"
+          # 'movej'
+          $ 24 "var_6≔[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]"
+          global var_6=[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]
+          $ 25 "movej(var_6,var_2[8],var_2[9],var_2[10],var_2[11])"
+          movej(var_6,var_2[8],var_2[9],var_2[10],var_2[11])
+          $ 26 "If var_2[12]==0"
+          if (var_2[12]==0):
+            $ 27 "socket_send_string('completed_joint_move')"
+            socket_send_string("completed_joint_move")
+          end
+        elif (2 == switch_1):
+          $ 29 "'movel'"
+          # 'movel'
+          $ 30 "var_3≔p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]"
+          global var_3=p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]
+          $ 31 "movel(var_3,var_2[8],var_2[9],var_2[10],var_2[11])"
+          movel(var_3,var_2[8],var_2[9],var_2[10],var_2[11])
+          $ 32 "If var_2[12]==0"
+          if (var_2[12]==0):
+            $ 33 "socket_send_string('completed_linear_move')"
+            socket_send_string("completed_linear_move")
+          end
+        elif (3 == switch_1):
+          $ 35 "'move to var_3 relative to current pose'"
+          # 'move to var_3 relative to current pose'
+          $ 36 "var_3≔p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]"
+          global var_3=p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]
+          $ 37 "var_5≔get_actual_tcp_pose()"
+          global var_5=get_actual_tcp_pose()
+          $ 38 "movel(pose_trans(var_5,var_3),var_2[8],var_2[9],var_2[10],var_2[11])"
+          movel(pose_trans(var_5,var_3),var_2[8],var_2[9],var_2[10],var_2[11])
+          $ 39 "If var_2[12]==0"
+          if (var_2[12]==0):
+            $ 40 "socket_send_string('completed_relative_linear_move')"
+            socket_send_string("completed_relative_linear_move")
+          end
+        elif (4 == switch_1):
+          $ 42 "'force move in single axis'"
+          # 'force move in single axis'
+          $ 43 "var_5≔get_actual_tcp_pose()"
+          global var_5=get_actual_tcp_pose()
+          $ 44 "If var_2[2]≠0"
+          if (var_2[2] != 0):
+            $ 45 "var_5[0]=var_5[0]+var_2[2]"
+            var_5[0]=var_5[0]+var_2[2]
+            $ 46 "axis≔0"
+            global axis=0
+          else:
+            $ 47 "ElseIf var_2[3]≠0"
+            if (var_2[3] != 0):
+              $ 48 "var_5[1]=var_5[1]+var_2[3]"
+              var_5[1]=var_5[1]+var_2[3]
+              $ 49 "axis≔1"
+              global axis=1
+            else:
+              $ 50 "ElseIf var_2[4]≠0"
+              if (var_2[4] != 0):
+                $ 51 "var_5[2]=var_5[2]+var_2[4]"
+                var_5[2]=var_5[2]+var_2[4]
+                $ 52 "axis≔2"
+                global axis=2
+              end
+            end
+          end
+          $ 53 "thread_flag= True "
+          thread_flag=  True
+          $ 54 "Loop thread_flag== True "
+          thread Thread_while_54():
+            while (True):
+              $ 55 "movel(var_5,var_2[8],var_2[9],0,0)"
+              movel(var_5,var_2[8],var_2[9],0,0)
+              $ 56 "Wait: 0.01"
+              sleep(0.01)
+              $ 57 "thread_flag= False "
+              thread_flag=  False
+            end
+          end
+          if (thread_flag==  True  ):
+            global thread_handler_54=run Thread_while_54()
+            while (thread_flag==  True  ):
+              sync()
+            end
+            kill thread_handler_54
+          end
+          $ 58 "stopl(10)"
+          stopl(10)
+          $ 59 "If var_2[12]==0"
+          if (var_2[12]==0):
+            $ 60 "socket_send_string('completed_force_move')"
+            socket_send_string("completed_force_move")
+          end
+        elif (5 == switch_1):
+          $ 62 "'servoj'"
+          # 'servoj'
+          $ 63 "var_3≔p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]"
+          global var_3=p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]
+          $ 64 "If var_2[12]==0"
+          if (var_2[12]==0):
+            $ 65 "stopl(0.5)"
+            stopl(0.5)
+          else:
+            $ 66 "Else"
+            $ 67 "var_14≔get_inverse_kin(var_3)"
+            global var_14=get_inverse_kin(var_3)
+            $ 68 "servoj(var_14,t=var_2[9],lookahead_time=var_2[10],gain=var_2[11])"
+            servoj(var_14,t=var_2[9],lookahead_time=var_2[10],gain=var_2[11])
+          end
+          $ 69 "If var_2[12]==0"
+          if (var_2[12]==0):
+            $ 70 "socket_send_string('completed_servoj_move')"
+            socket_send_string("completed_servoj_move")
+          end
+        elif (6 == switch_1):
+          $ 72 "'speedl'"
+          # 'speedl'
+          $ 73 "var_6≔[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]"
+          global var_6=[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]
+          $ 74 "If var_2[10]==0"
+          if (var_2[10]==0):
+            $ 75 "speedl(var_6,var_2[8])"
+            speedl(var_6,var_2[8])
+          else:
+            $ 76 "Else"
+            $ 77 "speedl(var_6,var_2[8],var_2[10])"
+            speedl(var_6,var_2[8],var_2[10])
+          end
+          $ 78 "socket_send_string('completed_speedl')"
+          socket_send_string("completed_speedl")
+        elif (7 == switch_1):
+          $ 80 "'speedj'"
+          # 'speedj'
+          $ 81 "var_6≔[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]"
+          global var_6=[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]
+          $ 82 "If var_2[10]==0"
+          if (var_2[10]==0):
+            $ 83 "speedj(var_6,var_2[8])"
+            speedj(var_6,var_2[8])
+          else:
+            $ 84 "Else"
+            $ 85 "speedj(var_6,var_2[8],var_2[10])"
+            speedj(var_6,var_2[8],var_2[10])
+          end
+          $ 86 "socket_send_string('completed_speedj')"
+          socket_send_string("completed_speedj")
+        elif (8 == switch_1):
+          $ 88 "'stopl'"
+          # 'stopl'
+          $ 89 "stopl(var_2[8])"
+          stopl(var_2[8])
+          $ 90 "socket_send_string('completed_stopl')"
+          socket_send_string("completed_stopl")
+        elif (9 == switch_1):
+          $ 92 "'servoc'"
+          # 'servoc'
+          $ 93 "var_3≔p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]"
+          global var_3=p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]
+          $ 94 "If var_2[12]==0"
+          if (var_2[12]==0):
+            $ 95 "stopl(var_2[8])"
+            stopl(var_2[8])
+          else:
+            $ 96 "Else"
+            $ 97 "servoc(var_3,a=var_2[8],v=var_2[9],r=var_2[11])"
+            servoc(var_3,a=var_2[8],v=var_2[9],r=var_2[11])
+          end
+          $ 98 "If var_2[12]==0"
+          if (var_2[12]==0):
+            $ 99 "socket_send_string('completed_servoc_move')"
+            socket_send_string("completed_servoc_move")
+          end
+        elif (10 == switch_1):
+          $ 101 "'return current pose'"
+          # 'return current pose'
+          $ 102 "var_5≔get_actual_tcp_pose()"
+          global var_5=get_actual_tcp_pose()
+          $ 103 "socket_send_string(var_5)"
+          socket_send_string(var_5)
+        elif (11 == switch_1):
+          $ 105 "'return current joints'"
+          # 'return current joints'
+          $ 106 "var_4≔get_actual_joint_positions()"
+          global var_4=get_actual_joint_positions()
+          $ 107 "socket_send_string(var_4)"
+          socket_send_string(var_4)
+        elif (12 == switch_1):
+          $ 109 "'return inverse kin of pose'"
+          # 'return inverse kin of pose'
+          $ 110 "var_3≔p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]"
+          global var_3=p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]
+          $ 111 "socket_send_string(get_inverse_kin(var_3))"
+          socket_send_string(get_inverse_kin(var_3))
+        elif (13 == switch_1):
+          $ 113 "'return translation to get to 2nd pose from 1st pose coord system'"
+          # 'return translation to get to 2nd pose from 1st pose coord system'
+          $ 114 "var_3≔p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]"
+          global var_3=p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]
+          $ 115 "var_5≔get_actual_tcp_pose()"
+          global var_5=get_actual_tcp_pose()
+          $ 116 "socket_send_string(pose_trans(var_5,var_3))"
+          socket_send_string(pose_trans(var_5,var_3))
+        elif (14 == switch_1):
+          $ 118 "'return current forces'"
+          # 'return current forces'
+          $ 119 "socket_send_string(get_tcp_force())"
+          socket_send_string(get_tcp_force())
+        elif (15 == switch_1):
+          $ 121 "'return force magnitude'"
+          # 'return force magnitude'
+          $ 122 "socket_send_string(force())"
+          socket_send_string(force())
+        elif (16 == switch_1):
+          $ 124 "'return tool velocity'"
+          # 'return tool velocity'
+          $ 125 "socket_send_string(get_actual_tcp_speed())"
+          socket_send_string(get_actual_tcp_speed())
+        elif (17 == switch_1):
+          $ 127 "'return force magnitude'"
+          # 'return force magnitude'
+          $ 128 "socket_send_string(get_actual_joint_speeds())"
+          socket_send_string(get_actual_joint_speeds())
+        elif (20 == switch_1):
+          $ 130 "'set tcp'"
+          # 'set tcp'
+          $ 131 "var_3≔p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]"
+          global var_3=p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]
+          $ 132 "set_tcp(var_3)"
+          set_tcp(var_3)
+          $ 133 "If var_2[12]==0"
+          if (var_2[12]==0):
+            $ 134 "socket_send_string('tcp_updated')"
+            socket_send_string("tcp_updated")
+          end
+        elif (21 == switch_1):
+          $ 136 "'set payload'"
+          # 'set payload'
+          $ 137 "set_payload(var_2[8],[var_2[2],var_2[3],var_2[4]])"
+          set_payload(var_2[8],[var_2[2],var_2[3],var_2[4]])
+          $ 138 "If var_2[12]==0"
+          if (var_2[12]==0):
+            $ 139 "socket_send_string('payload_updated')"
+            socket_send_string("payload_updated")
+          end
+        elif (30 == switch_1):
+          $ 141 "freedrive_mode()"
+          freedrive_mode()
+          $ 142 "socket_send_string('begin_freedrive_mode')"
+          socket_send_string("begin_freedrive_mode")
+        elif (31 == switch_1):
+          $ 144 "end_freedrive_mode()"
+          end_freedrive_mode()
+          $ 145 "socket_send_string('end_freedrive_mode')"
+          socket_send_string("end_freedrive_mode")
+        elif (32 == switch_1):
+          $ 147 "socket_send_string('begin_blend_move')"
+          socket_send_string("begin_blend_move")
+          $ 148 "var_13≔var_2[8]"
+          global var_13=var_2[8]
+          $ 149 "n≔0"
+          global n=0
+          $ 150 "Loop n<var_13"
+          while (n<var_13):
+            $ 151 "n=n+1"
+            n=n+1
+            $ 152 "Loop var_2[0]≠12"
+            while (var_2[0] != 12):
+              $ 153 "var_2≔socket_read_ascii_float(12)"
+              global var_2=socket_read_ascii_float(12)
+            end
+            $ 154 "var_3≔p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]"
+            global var_3=p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]
+            $ 155 "var_10[n] = var_3"
+            var_10[n] = var_3
+          end
+          $ 156 "movel(var_10[0],0.1,0.5,0,0)"
+          movel(var_10[0],0.1,0.5,0,0)
+          $ 157 "n≔0"
+          global n=0
+          $ 158 "Loop n<var_13"
+          while (n<var_13):
+            $ 159 "n=n+1"
+            n=n+1
+            $ 160 "movep(var_10[n])"
+            movep(var_10[n])
+          end
+        elif (33 == switch_1):
+          $ 162 "socket_send_string('begin_blend_move')"
+          socket_send_string("begin_blend_move")
+        elif (40 == switch_1):
+          $ 164 "socket_send_string('robot_ready')"
+          socket_send_string("robot_ready")
+        elif (100 == switch_1):
+          $ 166 "'reset program'"
+          # 'reset program'
+          $ 167 "If var_2[12]==0"
+          if (var_2[12]==0):
+            $ 168 "socket_send_string('resetting...')"
+            socket_send_string("resetting...")
+          end
+          $ 169 "socket_close()"
+          socket_close()
+          $ 170 "var_1≔ False "
+          global var_1=  False  
+        elif (101 == switch_1):
+          $ 172 "socket_send_string('ready')"
+          socket_send_string("ready")
+        elif (400 == switch_1):
+          $ 174 "'safe move'"
+          # 'safe move'
+          $ 175 "var_3≔p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]"
+          global var_3=p[var_2[2],var_2[3],var_2[4],var_2[5],var_2[6],var_2[7]]
+          $ 176 "var_5≔get_actual_tcp_pose()"
+          global var_5=get_actual_tcp_pose()
+          $ 177 "var_7≔get_inverse_kin(var_3)"
+          global var_7=get_inverse_kin(var_3)
+          $ 178 "var_8≔get_inverse_kin(var_5)"
+          global var_8=get_inverse_kin(var_5)
+          $ 179 "var_9≔0"
+          global var_9=0
+          $ 180 "Loop 6 times"
+          Loop_5 = 0
+          while (Loop_5 < 6):
+            $ 181 "If (var_7[Loop_5]-var_8[Loop_5])>2.0  or  (var_8[Loop_5]-var_7[Loop_5])>2.0"
+            if ((var_7[Loop_5]-var_8[Loop_5])>2.0   or   (var_8[Loop_5]-var_7[Loop_5])>2.0):
+              $ 182 "var_9=1"
+              var_9=1
+            end
+            Loop_5 = Loop_5 + 1
+          end
+          $ 184 "If var_9==0"
+          if (var_9==0):
+            $ 185 "movej(var_3,1,var_2[8],0,0)"
+            movej(var_3,1,var_2[8],0,0)
+            $ 186 "socket_send_string('completed_pose_move')"
+            socket_send_string("completed_pose_move")
+          else:
+            $ 187 "Else"
+            $ 188 "socket_send_string('no_safe_move_found')"
+            socket_send_string("no_safe_move_found")
+          end
+        end
+      end
+    end
+    if (var_1==  True  ):
+      global thread_handler_10=run Thread_while_10()
+      while (var_1==  True  ):
+        sync()
+      end
+      kill thread_handler_10
+    end
+  end
+end
