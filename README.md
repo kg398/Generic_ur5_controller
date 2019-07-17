@@ -26,9 +26,11 @@ the teach_mode.py is a seperate set of functions which allows you to manually mo
 -this version uses two connections.
 #### kg_robot
 -the general connection from kg_client will use the ip address of the computers ethernet connection. for windows open command prompt and enter ipconfig and find the ipv4 address of the ethernet adapter. set self.host in kg_robot.py line 27 and address of var_1:=socket_open('address',port) in kg_client.urp line 8, to this. 
+
 -this connection uses self.port, this is set in python when initialising the kg_robot object, see example in generic_ur5_controller\generic_ur5_controller.py. this must match the port in var_1:=socket_open('address',port) kg_client.urp line 8. use 30000 or >=30010 (29999 reserved for dashboard, 30001-30004 reserved for data exchange)
 #### kg_robot_dashboard
 -the dashboard port uses the ip address of the robot, the ip address of the robot is set by returning to the home page of the pedant, selecting 'setup robot' then 'network', selecting static address, inputting the new ip and applying. this is set in python when initialising kg_robot. the port of this connection is 29999 and should not be changed.
+
 -this address should be set to match the ip of the host computer with the last number different. e.g. if the host is 192.168.1.100 set the robot static address to 192.168.1.x where x!=100
 #### end effector
 -some support for serial connections, you may need to setup your own communications protocol
