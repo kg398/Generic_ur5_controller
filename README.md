@@ -13,7 +13,7 @@ robot.translatel_rel([0,0,-0.1]) move the robot in the z direction by -0.1m
 
 in addition to this controller, the PC can connect to the robot 'dashboard server' using the module kg_robot_dashboard.py, where the robot acts as the host. predefined commands can be sent over this connection, such as "load kg_client.urp\n" and "play\n". this is just for quality of life and automates the initialisation of the robot on startup and resets the program everytime the python program is reset. more commands are possible if needed (contact me or see https://www.universal-robots.com/how-tos-and-faqs/how-to/ur-how-tos/dashboard-server-cb-series-port-29999-15690/)
 
-the teach_mode.py is a seperate set of functions which allows you to manually move the robot, record the trajectory and replay it. this is an example of a more specialised set of functions which is initialised with kg_robot by adding self.teach_mode = teach_mode.teach_mode(self) to the __init__ of kg_robot.
+the teach_mode.py is a seperate set of functions which allows you to manually move the robot, record the trajectory and replay it. this is an example of a more specialised set of functions which is initialised with kg_robot by adding self.teach_mode = teach_mode.teach_mode(self) to the \__init__ of kg_robot.
 
  ## Connection Setup:
 
