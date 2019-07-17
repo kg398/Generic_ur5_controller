@@ -6,8 +6,10 @@ simple general purpose ur5 controller
 contains python to robot connections and example setup
 
 connection is done with the PC running python as a host, the robot will connect to the pc through ethernet(connected on the underside of the robot control box), allowing commmands to be sent over socket. the robot is controlled by calling functions from the kg_robot.py class e.g. 
-robot=kg_robot.kg_robot()        #creates a kg_robot object called robot
-robot.translatel_rel([0,0,-0.1]) #move the robot in the z direction by -0.1m
+
+robot=kg_robot.kg_robot()        creates a kg_robot object called robot
+
+robot.translatel_rel([0,0,-0.1]) move the robot in the z direction by -0.1m
 
 in addition to this controller, the PC can connect to the robot 'dashboard server' using the module kg_robot_dashboard.py, where the robot acts as the host. predefined commands can be sent over this connection, such as "load kg_client.urp\n" and "play\n". this is just for quality of life and automates the initialisation of the robot on startup and resets the program everytime the python program is reset. more commands are possible if needed (contact me or see https://www.universal-robots.com/how-tos-and-faqs/how-to/ur-how-tos/dashboard-server-cb-series-port-29999-15690/)
 
