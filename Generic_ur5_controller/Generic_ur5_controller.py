@@ -26,6 +26,9 @@ def main():
             elif ipt == 'play':
                 burt.teach_mode.play()
 
+            elif ipt == 'vel':
+                burt.speedl([0,0,-0.01,0,0,0],acc=0.1,blocking_time=5)
+
             else:
                 var = int(input("var: "))
                 burt.serial_send(ipt,var,True)

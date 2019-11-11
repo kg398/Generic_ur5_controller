@@ -254,30 +254,23 @@ class kg_robot():
         prog = self.format_prog(9,pose=pose,acc=acc,vel=vel,r=radius,w=stop)
         return self.socket_send(prog)
 
-    def speedl(self, pose, acc=1, vel_time=0.1, wait=False):
+    def speedl(self, pose, acc=1, blocking_time=0, wait=True):
         """
-        set tool speed, vel time is time for function to return
+        set speed in linear space, blocking time sets how long function runs (robot will stop after) if 0 will return after reaching vel
         """
-        prog = self.format_prog(6,pose=pose,acc=acc,t=vel_time,w=wait)
+        prog = self.format_prog(6,pose=pose,acc=acc,t=blocking_time,w=wait)
         return self.socket_send(prog)
 
-    def speedj(self, joints, acc=0.5, vel_time=0.1, wait=False):
+    def speedj(self, joints, acc=0.5, blocking_time=0, wait=True):
         """
-        set joint speed, vel time is time for function to return
+        set joint speed, blocking time sets how long function runs (robot will stop after) if 0 will return after reaching vel
         """
-        prog = self.format_prog(7,pose=joints,acc=acc,t=vel_time,w=wait)
+        prog = self.format_prog(7,pose=joints,acc=acc,t=blocking_time,w=wait)
         return self.socket_send(prog)
-
-    def speedj_sequence(self, joints, acc=1, vel_time=0.1, pos='middle'):
-        """
-        set joint speed, vel time is time for function to return
-        """
-        prog = self.format_prog(7,pose=joints,acc=acc,t=vel_time)
-        return self.socket_delayed_sequence(prog,pos)
 
     def stopl(self, acc, wait=True):
         """
-        decellerate in linear space
+        decelerate in linear space
         """
         prog = self.format_prog(8,acc=acc,w=wait)
         return self.socket_send(prog)
@@ -322,20 +315,6 @@ class kg_robot():
         self.demand_pose[1]+=pose[1]
         self.demand_pose[2]+=pose[2]
         return self.movejl(self.demand_pose,acc=acc,vel=vel,min_time=min_time,radius=radius,wait=wait)
-
-    def rotate_rel(self, pose, acc=0.5, vel=0.5, min_time=0, radius=0, wait=True):
-        """
-        joint rotate relative to current position
-        """
-        self.demand_pose = self.getj()
-        self.demand_pose[0] += pose[0]
-        self.demand_pose[1] += pose[1]
-        self.demand_pose[2] += pose[2]
-        self.demand_pose[3] += pose[3]
-        self.demand_pose[4] += pose[4]
-        self.demand_pose[5] += pose[5]
-        return self.movej(self.demand_pose,acc=acc,vel=vel,min_time=min_time,radius=radius,wait=wait)
-
 
     def translatel(self, pose, acc=0.5, vel=0.5, min_time=0, radius=0, wait=True):
         """
@@ -406,7 +385,6 @@ class kg_robot():
         prog = self.format_prog(15)
         return float(self.socket_send(prog))
 
-    
     def getlv(self):
         """
         get tool velocity
