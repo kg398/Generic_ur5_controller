@@ -138,6 +138,14 @@
            set_payload(var_2[8],[var_2[2],var_2[3],var_2[4]])
            If var_2[12]==0
              socket_send_string("payload_updated")
+         Case 22
+           'set digital out'
+           If var_2[9]==1
+             set_configurable_digital_out(var_2[8], True )
+           Else
+             set_configurable_digital_out(var_2[8], False )
+           If var_2[12]==0
+             socket_send_string("digital output set")
          Case 30
            freedrive_mode()
            socket_send_string("begin_freedrive_mode")
