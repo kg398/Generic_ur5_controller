@@ -419,6 +419,13 @@ class kg_robot():
             prog = self.format_prog(21,pose=cog.extend([0,0,0]),acc=weight)
         return self.socket_send(prog)
 
+    def set_digital_out(self, port, val=True):
+        """
+        set configurable digital out (port) to val
+        """
+        prog = self.format_prog(22,acc=port,vel=val)
+        return self.socket_send(prog)
+
 
     #-------------------------------------------------------------------------------------------------------------------------------------------------------------------
     #

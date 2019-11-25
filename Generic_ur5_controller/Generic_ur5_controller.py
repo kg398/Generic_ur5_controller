@@ -29,6 +29,11 @@ def main():
             elif ipt == 'vel':
                 burt.speedl([0,0,-0.01,0,0,0],acc=0.1,blocking_time=5)
 
+            elif ipt == 'hi':
+                burt.set_digital_out(0,1)
+            elif ipt == 'lo':
+                burt.set_digital_out(0,0)
+
             else:
                 var = int(input("var: "))
                 burt.serial_send(ipt,var,True)
